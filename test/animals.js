@@ -1,6 +1,7 @@
 const assert = require('assert')
 const chai = require('chai')
 const spies = require('chai-spies')
+const { ALL } = require('dns')
 const { expect } = chai
 const lista = {
   animales: [{
@@ -8,12 +9,18 @@ const lista = {
     },
     {
       tipo: 'Gato'
+    },
+    {
+      tipo: 'Iguana'
     }], 
     perros: function () {
-      return [this.animales[0]]
+      return this.animales.filter(animal => animal.tipo == 'Perro')
     },
     gatos: function () {
-      return [this.animales[1]]
+      return this.animales.filter(animal => animal.tipo == 'Gato')
+    },
+    otros: function () {
+      return this.animales.filter(animal => (animal.tipo != 'Perro' && animal.tipo != 'Gato'))
     }
 }
 
@@ -40,13 +47,16 @@ describe('Lista de animales', () => {
     })
   })
 
-  // describe('#otros', () => {
-  //   it('devuelve los animales que no son perros ni gatos', () => {
-  //     expect(lista.otros()).to.equal(otros)
-  //   })
+  describe('#otros', () => {
+    it('devuelve los animales que no son perros ni gatos', () => {
+      const otros = [{
+        tipo: 'Iguana'
+      }]
+      expect(lista.otros()).to.eql(otros)
+    })
+  })
 
-  //   it('determina los resultados utilizando Array.filter', () => {
-  //     expect(animales.filter).to.have.been.called()
-  //   })
-  // })
+    it('determina los resultados utilizando Array.filter', () => {
+      expect(lista.animales.filter()).to.have.been.called()
+    })
 })
