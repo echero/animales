@@ -1,8 +1,10 @@
 const assert = require('assert')
 const chai = require('chai')
 const spies = require('chai-spies')
-const { ALL } = require('dns')
 const { expect } = chai
+
+chai.use(spies)
+
 const lista = {
   animales: [{
       tipo: 'Perro'
@@ -54,9 +56,13 @@ describe('Lista de animales', () => {
       }]
       expect(lista.otros()).to.eql(otros)
     })
-  })
 
     it('determina los resultados utilizando Array.filter', () => {
-      expect(lista.animales.filter()).to.have.been.called()
+
+      chai.spy.on(lista.animales, 'filter')
+      lista.perros()
+
+      expect(lista.animales.filter).to.have.been.called()
     })
+  })
 })
